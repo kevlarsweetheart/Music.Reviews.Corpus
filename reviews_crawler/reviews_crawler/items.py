@@ -12,7 +12,7 @@ class ReviewsCrawlerItem(scrapy.Item):
     _id = scrapy.Field()
     url = scrapy.Field()
     album_year = scrapy.Field()
-    review_date = scrapy.Field()
+    review_year = scrapy.Field()
     author = scrapy.Field()
     artist = scrapy.Field()
     album = scrapy.Field()

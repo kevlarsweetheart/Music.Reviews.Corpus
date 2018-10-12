@@ -106,4 +106,4 @@ venv.bak/
 
 # Database
 *.db
-**/reviews_texts
+**/reviews_texts/
