@@ -8,9 +8,10 @@ class SlantMagazineReviewsCrawler(scrapy.Spider):
     allowed_domains = ['www.slantmagazine.com']
 
     def ParsePage(self, response):
-        pages = response.xpath('article[contains(@class, "clearfix loadable hoverable")]//a/@href').extract()
+        pages = response.xpath('//article//a/@href').extract()
         for page in pages:
-            yield scrapy.Request(page, callback=self.ParseReviewPage)
+            if 'review' in page.split('/'):
+                yield scrapy.Request(page, callback=self.ParseReviewPage)
 
     def ParseReviewPage(self, response):
         _id = str(uuid.uuid4().hex)

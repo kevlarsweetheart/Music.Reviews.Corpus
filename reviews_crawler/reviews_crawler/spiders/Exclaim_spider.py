@@ -6,12 +6,12 @@ import re
 class SlantMagazineReviewsCrawler(scrapy.Spider):
     name = 'Exclaim_reviews'
     start_urls = ['https://exclaim.ca/music/reviews/page/1']
-    allowed_domains = ['www.exclaim.ca']
+    allowed_domains = ['exclaim.ca']
 
     def ParsePage(self, response):
         pages = response.xpath('//a[contains(@data-title, "News")]//@href').extract()
         for page in pages:
-            yield scrapy.Request(page, callback=self.ParseReviewPage)
+            yield scrapy.Request("https://exclaim.ca" + page, callback=self.ParseReviewPage)
 
     def ParseReviewPage(self, response):
         _id = str(uuid.uuid4().hex)
@@ -20,7 +20,7 @@ class SlantMagazineReviewsCrawler(scrapy.Spider):
         rating = str(int(float(response.xpath('//div[contains(@class, "article-rating")]//text()').extract_first()) * 10))
         author = response.xpath('//div[contains(@class, "article-author")]//a//text()').extract_first()
         artist = response.xpath('//span[contains(@class, "article-title")]//text()').extract_first()
-        genre = response.xpath('//li[contains(@class, "filters-selected-item")]//text()').extract()[2:-1]
+        genre = response.xpath('//li[contains(@class, "filters-selected-item")]//text()').extract()[2] #[2:-1]
         albumYear = ""
         reviewYear = response.xpath('//div[contains(@class, "article-published")]//text()').extract_first()[-4:]
         source = 'Exclaim'

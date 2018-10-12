@@ -26,8 +26,8 @@ class ReviewsCrawlerPipeline(object):
 
     def process_item(self, item, spider):
         self.cursor.execute("SELECT COUNT(*) FROM reviews WHERE url = '" + item['url'] + "';")
-        result = self.cursor.fetchone()
-        if(result):
+        (result, ) = self.cursor.fetchone()
+        if(result == 0):
             self.cursor.execute("""INSERT INTO reviews (_id, artist, album, rating, genre, author, album_year, review_year, source, url) VALUES
                 (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);""", (item['_id'], item['artist'], item['album'], item['rating'], item['genre'], item['author'],
                                                                    item['album_year'], item['review_year'], item['source'], item['url']))
