@@ -1,7 +1,6 @@
 import scrapy
 import uuid
 from reviews_crawler.items import ReviewsCrawlerItem
-from tqdm import trange
 
 class PitchforkReviewsCrawler(scrapy.Spider):
     name = 'Pitchfork_reviews'
@@ -22,16 +21,17 @@ class PitchforkReviewsCrawler(scrapy.Spider):
         artist = response.xpath('//div[contains(@class, "single-album-tombstone")]//a/text()').extract_first()
         genre = response.xpath('//a[contains(@class, "genre-list__link")]/text()').extract_first()
         albumYear = response.xpath('//span[contains(@class, "single-album-tombstone__meta-year")]/text()').extract()[-1]
+        reviewYear = response.xpath('//time[contains(@class, "pub-date")]/text()').extract_first()[-4:]
         source = 'Pitchfork'
         text = []
         for a in response.xpath('//div[contains(@class, "contents dropcap")]/p'):
             text.append("".join(a.xpath(".//text()").extract()))
         text = ' '.join(text)
-        review = ReviewsCrawlerItem(_id=_id, url=url, album_year=albumYear, author=author, artist=artist, album=album, rating=rating, genre=genre, source=source, text=text)
+        review = ReviewsCrawlerItem(_id=_id, url=url, album_year=albumYear, review_year=reviewYear, author=author, artist=artist, album=album, rating=rating, genre=genre, source=source, text=text)
         yield review
 
-    # Visit Pitchfork reviews pages from January 2015 to October 2018
+    # Visit Pitchfork reviews pages from January 2012 to October 2018
     def parse(self, response):
-        for page in trange(1, 386):
+        for page in range(1, 682): #682
             new_page = response.url[:-1] + str(page)
             yield scrapy.Request(new_page, callback=self.ParsePage)
