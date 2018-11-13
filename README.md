@@ -44,3 +44,5 @@
   
  Например:
  artist:Slowdive OR text:shoegaze AND album:Soulvaki - найти все рецензии, у которых исполнитель - Slowdive или альбом Soulvaki и при этом в тексте встречается shoegaze 
+
+Результат выводится в формате "Terms {terms set} were found in <id рецензии>" для всех совпадений
